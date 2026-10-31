@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Bridge</title>
+
+  <style>
+    body {
+      background: #101827;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px 15px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #1e293b;
+      padding: 25px;
+      border-radius: 20px;
+    }
+
+    h1 {
+      color: orange;
+    }
+
+    input {
+      width: 90%;
+      padding: 13px;
+      border: none;
+      border-radius: 10px;
+      font-size: 17px;
+      margin: 10px 0;
+      box-sizing: border-box;
+    }
+
+    button {
+      background: orange;
+      color: #101827;
+      border: none;
+      padding: 13px 20px;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: bold;
+      margin: 8px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 25px;
+      font-size: 24px;
+      color: #fbbf24;
+    }
+
+    #speaker {
+      background: #22c55e;
+      color: white;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>🌉 Word Bridge</h1>
+    <p>English to Hindi Translator</p>
+
+    <input
+      type="text"
+      id="english"
+      placeholder="Enter an English word"
+    >
+
+    <button onclick="translateWord()">
+      Translate
+    </button>
+
+    <div id="result"></div>
+
+    <button id="speaker" onclick="speakHindi()" hidden>
+      🔊 Speak Hindi
+    </button>
+
+    <p id="message"></p>
+
+  </div>
+
+  <script>
+
+    let hindiWord = "";
+
+    // English to Hindi dictionary
+    const dictionary = {
+      hello: "नमस्ते",
+      water: "पानी",
+      book: "किताब",
+      love: "प्यार",
+      apple: "सेब",
+      school: "विद्यालय",
+      mother: "माँ",
+      father: "पिता",
+      friend: "दोस्त",
+      coffee: "कॉफ़ी",
+      food: "खाना",
+      thankyou: "धन्यवाद"
+    };
+
+    function translateWord() {
+
+      let word = document
+        .getElementById("english")
+        .value.trim().toLowerCase();
+
+      hindiWord = dictionary[word.replace(/\s+/g, "")];
+
+      const result = document.getElementById("result");
+      const speaker = document.getElementById("speaker");
+      const message = document.getElementById("message");
+
+      if (hindiWord) {
+
+        result.innerText = "Hindi: " + hindiWord;
+        speaker.hidden = false;
+        message.innerText = "";
+
+      } else {
+
+        result.innerText = "Word not found 😔";
+        speaker.hidden = true;
+        message.innerText = "Try another word!";
+
+      }
+    }
+
+    // Hindi pronunciation speaker
+    function speakHindi() {
+
+      if (!hindiWord) return;
+
+      if (!("speechSynthesis" in window)) {
+        document.getElementById("message").innerText =
+          "Speech is not supported in this browser.";
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      let speech = new SpeechSynthesisUtterance(hindiWord);
+
+      speech.lang = "hi-IN";
+      speech.rate = 0.85;
+      speech.pitch = 1;
+
+      window.speechSynthesis.speak(speech);
+
+    }
+
+  </script>
+
+</body>
+</html>
